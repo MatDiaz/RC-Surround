@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="xN6R98" name="RC Surround" projectType="audioplug" jucerVersion="5.3.2"
               companyName="Ricardo Castanez" pluginManufacturer="Ricardo Castanez"
-              pluginName="RC Surround" pluginFormats="buildVST">
+              pluginName="RC Surround" pluginFormats="buildAU,buildVST">
   <MAINGROUP id="vQfhsq" name="RC Surround">
     <GROUP id="{005DE923-D1B1-6BD3-4C9A-C73E415C69CB}" name="Source">
       <FILE id="XnBbat" name="GUI.cpp" compile="1" resource="0" file="Source/GUI.cpp"/>

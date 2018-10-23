@@ -325,7 +325,7 @@ void PluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
 
 			Carpeta = abreCarpeta.getResult();
 
-			archivoImagen = Carpeta.getFullPathName() + "\\" + "background.jpg";
+			archivoImagen = Carpeta.getFullPathName() + "/"  + "background.jpg";
 
 			studioImage = formatImage->loadFrom(archivoImagen);
 
@@ -337,7 +337,7 @@ void PluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
 			{
 				 File archivoActual = Carpeta;
 
-				 archivoActual = Carpeta.getFullPathName() + "\\" + archivosSurround[i];
+				 archivoActual = Carpeta.getFullPathName() + "/" + archivosSurround[i];
 
 				 ScopedPointer<AudioFormatReader> readOperator;
 

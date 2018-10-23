@@ -52,6 +52,9 @@ public:
     void buttonClicked (Button* buttonThatWasClicked) override;
     void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
 
+    // Binary resources:
+    static const char* abstractaurabackground1755_jpg;
+    static const int abstractaurabackground1755_jpgSize;
 
 
 private:
@@ -85,8 +88,8 @@ private:
     std::unique_ptr<Label> activeSystemLabel;
     std::unique_ptr<Label> systemLabel;
     std::unique_ptr<ComboBox> referenceComboBox;
-    std::unique_ptr<Label> placeLabel;
-    std::unique_ptr<Label> DescriptionLabel;
+    std::unique_ptr<TextButton> textButton;
+    Image cachedImage_abstractaurabackground1755_jpg_1;
 
 
     //==============================================================================

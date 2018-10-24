@@ -75,9 +75,13 @@ private:
 
 	AudioFormatManager formatManager;
 
-	bool imageLoaded;
+	bool imageLoaded, infoAvaliable;
 
 	Image studioImage;
+
+    File Carpeta;
+
+    File CarpetaAudifonos;
 
 	ScopedPointer<ImageFileFormat> formatImage;
     //[/UserVariables]
@@ -85,10 +89,10 @@ private:
     //==============================================================================
     std::unique_ptr<TextButton> loadButton;
     std::unique_ptr<ComboBox> systemComboBox;
-    std::unique_ptr<Label> activeSystemLabel;
-    std::unique_ptr<Label> systemLabel;
     std::unique_ptr<ComboBox> referenceComboBox;
-    std::unique_ptr<TextButton> textButton;
+    std::unique_ptr<TextButton> headPhoneButton;
+    std::unique_ptr<Label> activeSystemLabel;
+    std::unique_ptr<TextButton> infoButton;
     Image cachedImage_abstractaurabackground1755_jpg_1;
 
 

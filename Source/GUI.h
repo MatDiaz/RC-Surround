@@ -94,6 +94,7 @@ private:
     std::unique_ptr<Label> activeSystemLabel;
     std::unique_ptr<TextButton> infoButton;
     Image cachedImage_abstractaurabackground1755_jpg_1;
+	Array<File> filesInFolder;
 
 
     //==============================================================================

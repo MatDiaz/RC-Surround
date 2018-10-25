@@ -75,15 +75,16 @@ private:
 
 	AudioFormatManager formatManager;
 
-	bool imageLoaded, infoAvaliable;
+	bool imageLoaded, headPhoneLoaded ,infoAvaliable;
 
-	Image studioImage;
+	Image studioImage, headPhoneImage;
 
-    File Carpeta;
-
-    File CarpetaAudifonos;
+    File Carpeta, CarpetaAudifonos, nFile;
 
 	ScopedPointer<ImageFileFormat> formatImage;
+    
+    Array<File> filesInFolder;
+    
     //[/UserVariables]
 
     //==============================================================================
@@ -94,7 +95,6 @@ private:
     std::unique_ptr<Label> activeSystemLabel;
     std::unique_ptr<TextButton> infoButton;
     Image cachedImage_abstractaurabackground1755_jpg_1;
-	Array<File> filesInFolder;
 
 
     //==============================================================================

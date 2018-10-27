@@ -25,6 +25,10 @@ PluginAudioProcessor::PluginAudioProcessor()
 #endif
 {
 	isLoaded = false;
+    shouldProcessHeadphones = false;
+    headphonesReady = false;
+    outputGain = 1;
+    previousOutputGain = 1;
 }
 
 PluginAudioProcessor::~PluginAudioProcessor()
@@ -99,6 +103,10 @@ void PluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock
 	convolutionProperties.sampleRate = sampleRate;
 	convolutionProperties.maximumBlockSize = samplesPerBlock;
 	convolutionProperties.numChannels = 2;
+    
+    headphoneConvolutionProperties.sampleRate = sampleRate;
+    headphoneConvolutionProperties.maximumBlockSize = samplesPerBlock;
+    headphoneConvolutionProperties.numChannels = 1;
 	
 	for (int i = 0; i < 6; i++)
 	{
@@ -106,7 +114,12 @@ void PluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock
 		audioBufferList[i]->setSize(1, samplesPerBlock, false, false, false);
 		audioBufferList[i]->clear();
 	}
-	
+    
+    nBufferL.setSize(1, samplesPerBlock);
+    nBufferL.clear();
+    
+    nBufferR.setSize(1, samplesPerBlock);
+    nBufferR.clear();
 }
 
 void PluginAudioProcessor::releaseResources()
@@ -178,6 +191,36 @@ void PluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
 				}
 			}
 		}
+        
+        if (shouldProcessHeadphones && headphonesReady)
+        {
+            float* channelL = buffer.getWritePointer(0);
+            float* channelR = buffer.getWritePointer(1);
+            
+            float* channelNL = nBufferL.getWritePointer(0);
+            float* channelNR = nBufferR.getWritePointer(0);
+            
+            memcpy(channelNL, channelL, sizeof(float) * buffer.getNumSamples());
+            memcpy(channelNR, channelR, sizeof(float) * buffer.getNumSamples());
+            
+            dsp::AudioBlock<float> headphoneBufferL(nBufferL), headphoneBufferR(nBufferR);
+            dsp::ProcessContextReplacing<float> ctxxL(headphoneBufferL), ctxxR(headphoneBufferR);
+            
+            headphoneConvolutionEngineL.process(ctxxL);
+            headphoneConvolutionEngineR.process(ctxxR);
+            
+            for (auto i = 0; i < buffer.getNumSamples(); i++)
+            {
+                channelL[i] = headphoneBufferL.getSample(0, i);
+                channelR[i] = headphoneBufferR.getSample(0, i);
+            }
+            
+        }
+
+        buffer.applyGainRamp(0, buffer.getNumSamples(), previousOutputGain, outputGain);
+        
+        previousOutputGain = outputGain;
+        
 	}
 }
 
@@ -231,6 +274,30 @@ void PluginAudioProcessor::loadImpulseResponseToEngine(AudioBuffer<float>& Loade
 	convolutionEngineListR.add(new dsp::Convolution());
 	convolutionEngineListR[position]->prepare(convolutionProperties);
 	convolutionEngineListR[position]->copyAndLoadImpulseResponseFromBuffer(tempBufferR, sampleRate, false, false, false, 0);
+}
+
+void PluginAudioProcessor::loadImpulseResponseHeadphones(AudioBuffer<float> &LoadedIR, double sampleRate, int fileSize)
+{
+    AudioBuffer<float> tempBufferL, tempBufferR;
+    tempBufferL.setSize(1, fileSize);
+    tempBufferR = tempBufferL;
+    
+    float* channelL = LoadedIR.getWritePointer(0);
+    float* channelR = LoadedIR.getWritePointer(1);
+    
+    for (int i = 0; i < fileSize; i++)
+    {
+        tempBufferL.setSample(0, i, channelL[i]);
+        tempBufferR.setSample(0, i, channelR[i]);
+    }
+    
+    headphoneConvolutionEngineL.prepare(headphoneConvolutionProperties);
+    headphoneConvolutionEngineL.copyAndLoadImpulseResponseFromBuffer(tempBufferL, sampleRate, false, false, false, 0);
+    
+    headphoneConvolutionEngineR.prepare(headphoneConvolutionProperties);
+    headphoneConvolutionEngineR.copyAndLoadImpulseResponseFromBuffer(tempBufferR, sampleRate, false, false, false, 0);
+    
+    headphonesReady = true;
 }
 
 //==============================================================================

@@ -36,7 +36,8 @@
 */
 class PluginAudioProcessorEditor  : public AudioProcessorEditor,
                                     public Button::Listener,
-                                    public ComboBox::Listener
+                                    public ComboBox::Listener,
+                                    public Slider::Listener
 {
 public:
     //==============================================================================
@@ -51,6 +52,7 @@ public:
     void resized() override;
     void buttonClicked (Button* buttonThatWasClicked) override;
     void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
+    void sliderValueChanged (Slider* sliderThatWasMoved) override;
 
     // Binary resources:
     static const char* abstractaurabackground1755_jpg;
@@ -60,6 +62,7 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     PluginAudioProcessor& processor;
+    
 	OwnedArray<File> listaArchivos;
 	OwnedArray<AudioFormatReader> listaDatosArchivos;
 	OwnedArray<Label> labelList;
@@ -75,16 +78,18 @@ private:
 
 	AudioFormatManager formatManager;
 
-	bool imageLoaded, headPhoneLoaded ,infoAvaliable;
+	bool imageLoaded, headPhoneLoaded ,infoAvaliable, compensationOn;
 
 	Image studioImage, headPhoneImage;
 
     File Carpeta, CarpetaAudifonos, nFile;
 
 	ScopedPointer<ImageFileFormat> formatImage;
-    
+
     Array<File> filesInFolder;
-    
+
+    TooltipWindow tooltipInstance;
+
     //[/UserVariables]
 
     //==============================================================================
@@ -94,8 +99,11 @@ private:
     std::unique_ptr<TextButton> headPhoneButton;
     std::unique_ptr<Label> activeSystemLabel;
     std::unique_ptr<TextButton> infoButton;
+    std::unique_ptr<Label> controlGananciaLabel;
+    std::unique_ptr<Slider> outputGain;
+    std::unique_ptr<ToggleButton> compensationToggle;
+    std::unique_ptr<Label> outputGainLabel;
     Image cachedImage_abstractaurabackground1755_jpg_1;
-
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginAudioProcessorEditor)

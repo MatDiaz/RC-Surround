@@ -55,16 +55,22 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-	void loadImpulseResponseToEngine(AudioBuffer<float>& LoadedIR, int position, double sampleRate, int fileSize);
+	void loadImpulseResponseToEngine (AudioBuffer<float>& LoadedIR, int position, double sampleRate, int fileSize);
+    
+    void loadImpulseResponseHeadphones (AudioBuffer<float>& LoadedIR, double sampleRate, int fileSize);
 
-	bool isLoaded;
+    bool isLoaded, shouldProcessHeadphones, headphonesReady;
+    
+    float outputGain, previousOutputGain;
 
 private:
 
-	dsp::Convolution convolutionEngine;
-	dsp::ProcessSpec convolutionProperties;
+	// dsp::Convolution convolutionEngine;
+	dsp::ProcessSpec convolutionProperties, headphoneConvolutionProperties;
 
 	OwnedArray<dsp::Convolution> convolutionEngineListL, convolutionEngineListR;
+    dsp::Convolution headphoneConvolutionEngineL, headphoneConvolutionEngineR;
+    
 	OwnedArray<AudioBuffer<float>> audioBufferList;
 	AudioBuffer<float> nBufferL, nBufferR;
 

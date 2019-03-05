@@ -62,7 +62,7 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     PluginAudioProcessor& processor;
-    
+
 	OwnedArray<File> listaArchivos;
 	OwnedArray<AudioFormatReader> listaDatosArchivos;
 	OwnedArray<Label> labelList;
@@ -104,6 +104,7 @@ private:
     std::unique_ptr<ToggleButton> compensationToggle;
     std::unique_ptr<Label> outputGainLabel;
     Image cachedImage_abstractaurabackground1755_jpg_1;
+
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginAudioProcessorEditor)
